@@ -1,12 +1,15 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from "react-router-dom";
 import Calendar from "../components/Calendar";
 
-export default function Book () {
+export default function Book() {
   const { roomID } = useParams();
-  
+
   return (
     <div>
-        <p>Booking for Room ID: {roomID}</p>
+      <Link to={`/rooms/${roomID}`} className="back-link">
+        ‹ Back to room
+      </Link>
+      <h2 style={{ marginBottom: 16 }}>Pick a day</h2>
       <Calendar roomID={roomID} />
     </div>
   );

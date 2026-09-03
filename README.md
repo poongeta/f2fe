@@ -1,16 +1,29 @@
-# React + Vite
+# f2 Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend for f2, a room booking app — browse rooms, book time slots, manage your bookings, and (for admins) manage rooms and bookings across users.
 
-Currently, two official plugins are available:
+Built with React, Vite, Redux Toolkit, and React Router. Talks to a REST API (expected at `http://localhost:5000/api/v1` by default, see [src/api/axios.js](src/api/axios.js)) for auth and booking data.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- Login / register with JWT auth
+- Browse rooms and view a room's booking calendar
+- Book a room for a time slot
+- View and manage your own bookings
+- Admin pages for managing rooms and all bookings
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting started
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Requires the f2 API running locally (or update the `baseURL` in [src/api/axios.js](src/api/axios.js) to point elsewhere).
+
+## Scripts
+
+- `npm run dev` — start the dev server
+- `npm run build` — production build
+- `npm run preview` — preview the production build
+- `npm run lint` — run ESLint

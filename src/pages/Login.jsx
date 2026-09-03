@@ -1,31 +1,37 @@
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import { FaSignInAlt } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { login, reset } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import FormAlert from "../components/FormAlert";
 
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const { name, email, password, password2 } = formData;
+  const [formError, setFormError] = useState("");
+  const { email, password } = formData;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
+
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
-    //redirect when logged in
     if (isSuccess || user) {
       navigate("/");
     }
-    dispatch(reset());
-  }, [isError, isSuccess, user, message, navigate, dispatch]);
+  }, [isSuccess, user, navigate]);
+
+  useEffect(() => {
+    if (isError) setFormError(message);
+  }, [isError, message]);
+
+  useEffect(() => {
+    return () => dispatch(reset());
+  }, [dispatch]);
+
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -34,11 +40,8 @@ function Login() {
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    const userData = {
-      email,
-      password,
-    };
-    dispatch(login(userData));
+    setFormError("");
+    dispatch(login({ email, password }));
   };
   return (
     <>
@@ -74,11 +77,10 @@ function Login() {
               required
             />
           </div>
+          <FormAlert>{formError}</FormAlert>
           <div className="form-group">
-            <button
-              className="btn btn-block"
-            >
-              Submit
+            <button className="btn btn-block" disabled={isLoading}>
+              {isLoading ? "Logging in…" : "Submit"}
             </button>
           </div>
         </form>

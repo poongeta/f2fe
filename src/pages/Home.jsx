@@ -1,24 +1,35 @@
 import { Link } from "react-router-dom";
-import { LuHouse, LuCalendarCheck } from "react-icons/lu";
+import { useSelector } from "react-redux";
+
 function Home() {
+  const { user } = useSelector((state) => state.auth);
+
   return (
-    <div className="min-h-screen p-8 text-white bg-hero flex flex-col items-center justify-center gap-6">
-      <h1 className="text-2xl md:text-3xl font-semibold">F2 Co-Working Space Reservation System</h1>
-
-      <div className="flex flex-col sm:flex-row gap-3">
-        <Link to="/bookings">
-          <button className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/10 hover:bg-white/20 transition text-white">
-            <LuCalendarCheck /> View Your Booking
-          </button>
-        </Link>
-
-        <Link to="/rooms">
-          <button className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/10 hover:bg-white/20 transition text-white">
-            <LuHouse size={20} /> View Room List
-          </button>
-        </Link>
+    <section className="hero">
+      <h1>Book a room at F2 Co-Working.</h1>
+      <p>Pick a space, check the day, reserve it.</p>
+      <div className="hero-actions">
+        {user ? (
+          <>
+            <Link to="/rooms" className="btn">
+              Browse rooms
+            </Link>
+            <Link to="/bookings" className="btn btn-outline">
+              Your bookings
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/register" className="btn">
+              Create an account
+            </Link>
+            <Link to="/login" className="btn btn-outline">
+              Log in
+            </Link>
+          </>
+        )}
       </div>
-    </div>
+    </section>
   );
 }
 export default Home;

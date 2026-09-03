@@ -1,34 +1,39 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { register, reset } from "../features/auth/authSlice";
+import FormAlert from "../components/FormAlert";
 function Register() {
   const [formData, setFormData] = useState({
     name: "",
+    tel: "",
     email: "",
     password: "",
     password2: "",
-    role: "user",
   });
-  const { name, email, password, password2, role } = formData;
+  const [formError, setFormError] = useState("");
+  const { name, tel, email, password, password2 } = formData;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => {
-      return state.auth;
-    }
-  );
+  const { user, isLoading, isError, isSuccess, message } = useSelector((state) => {
+    return state.auth;
+  });
+
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
-    //redirect when logged in
     if (isSuccess || user) {
-     navigate("/");
+      navigate("/");
     }
-  }, [isError, isSuccess, user, message, navigate, dispatch]);
+  }, [isSuccess, user, navigate]);
+
+  useEffect(() => {
+    if (isError) setFormError(message);
+  }, [isError, message]);
+
+  useEffect(() => {
+    return () => dispatch(reset());
+  }, [dispatch]);
+
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -37,17 +42,12 @@ function Register() {
   };
   const onSubmit = (e) => {
     e.preventDefault();
+    setFormError("");
     if (password !== password2) {
-      toast.error("Passwords do not match");
-    } else {
-      const userData = {
-        name,
-        email,
-        password,
-        role,
-      };
-      dispatch(register(userData));
+      setFormError("Passwords do not match");
+      return;
     }
+    dispatch(register({ name, tel, email, password, role: "user" }));
   };
   return (
     <>
@@ -73,6 +73,18 @@ function Register() {
           </div>
           <div className="form-group">
             <input
+              type="tel"
+              className="form-control"
+              id="tel"
+              name="tel"
+              value={tel}
+              onChange={onChange}
+              placeholder="Enter Your phone number"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
               type="email"
               className="form-control"
               id="email"
@@ -86,8 +98,7 @@ function Register() {
           <div className="form-group">
             <input
               type="password"
-              className="form-
-control"
+              className="form-control"
               id="password"
               name="password"
               value={password}
@@ -99,8 +110,7 @@ control"
           <div className="form-group">
             <input
               type="password"
-              className="form-
-control"
+              className="form-control"
               id="password2"
               name="password2"
               value={password2}
@@ -109,24 +119,10 @@ control"
               required
             />
           </div>
+          <FormAlert>{formError}</FormAlert>
           <div className="form-group">
-            <input
-              type="text"
-              className="form-control"
-              id="role"
-              name="role"
-              value={role}
-              onChange={onChange}
-              placeholder="Enter Your Role"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <button
-              className="btn btn-
-block"
-            >
-              Submit
+            <button className="btn btn-block" disabled={isLoading}>
+              {isLoading ? "Creating account…" : "Submit"}
             </button>
           </div>
         </form>
